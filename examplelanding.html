@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherNow - Weather Website</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #ffffff; /* White text for black background */
+            background-color: #000000; /* Black background */
+            background-image: url('YOUR_IMAGE_URL_HERE'); /* Add your image URL here */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(26, 26, 26, 0.8); /* Darker shade of black with transparency */
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* White shadow for visibility */
+        }
+
+        header .logo img {
+            height: 50px;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        header .search-bar input {
+            padding: 10px;
+            border: 1px solid #333; /* Darker border */
+            border-radius: 5px;
+            background-color: #222; /* Darker input background */
+            color: #fff;
+        }
+
+        header .search-bar button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff; /* Primary Blue */
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            color: white;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .hero-content button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff; /* Primary Blue */
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* Forecast Section */
+        .forecast {
+            padding: 50px 20px;
+            text-align: center;
+            background-color: rgba(18, 18, 18, 0.8); /* Slightly lighter black with transparency */
+        }
+
+        .forecast h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .forecast-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .forecast-item {
+            background-color: #222; /* Darker forecast items */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+            width: 150px;
+        }
+
+        .forecast-item img {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.8); /* Black footer with transparency */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer .footer-links {
+            margin-bottom: 10px;
+        }
+
+        footer .footer-links a {
+            color: #adb5bd; /* Light Gray */
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer .social-media {
+            margin-bottom: 10px;
+        }
+
+        footer .social-media img {
+            width: 30px;
+            height: 30px;
+            margin: 0 10px;
+        }
+
+        footer .contact-info p {
+            margin: 5px 0;
+            color: #adb5bd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="wlogo.png" alt="WeatherNow Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Forecast</a></li>
+                <li><a href="#">Maps</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">SignUp</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Search city or zip code...">
+            <button>Search</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to WeatherNow</h1>
+            <p>Get real-time weather updates for any location.</p>
+            <button>Get Started</button>
+        </div>
+    </section>
+
+    <section class="forecast">
+        <h2>5-Day Weather Forecast</h2>
+        <div class="forecast-list">
+            <div class="forecast-item">
+                <img src="sunny.png" alt="Sunny">
+                <p>Mon</p>
+                <p>72°F</p>
+            </div>
+            <div class="forecast-item">
+                <img src="cloudy.png" alt="Cloudy">
+                <p>Tue</p>
+                <p>68°F</p>
+            </div>
+            <div class="forecast--item"><img src="rain.png" alt="Rainy">
+                <p>Wed</p>
+                <p>65°F</p>
+            </div>
+            <div class="forecast-item">
+                <img src="sunny.png" alt="Sunny">
+                <p>Thu</p>
+                <p>70°F</p>
+            </div>
+            <div class="forecast-item">
+                <img src="cloudy.png" alt="Cloudy">
+                <p>Fri</p>
+                <p>69°F</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">FAQ</a>
+        </div>
+        <div class="social-media">
+            <a href="#"><img src="facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="twitter.png" alt="Twitter"></a>
+            <a href="#"><img src="instagram.png" alt="Instagram"></a>
+        </div>
+        <div class="contact-info">
+            <p>Email: support@weathernow.com</p>
+            <p>Phone: +1 (123) 456-7890</p>
+        </div>
+    </footer>
+</body>
+</html>
