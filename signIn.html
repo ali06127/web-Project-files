@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication</title>
+    <title>Sign In</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
-        <div id="sign-in">
+        <div class="signin-box">
             <h2>Sign In</h2>
             <form id="signin-form">
                 <div class="input-group">
-                    <input type="email" id="signin-email" required>
-                    <label>Email</label>
+                    <input type="email" id="signin-email" placeholder="Email" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="signin-password" required>
-                    <label>Password</label>
-                    <span class="toggle-password" onclick="togglePassword('signin-password')">👁️</span>
+                    <input type="password" id="signin-password" placeholder="Password" required>
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <img src="👁️" alt="Toggle Password">
+                    </span>
                 </div>
-                <button type="submit">Sign In</button>
-                <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-                <p><a href="forgot.html">Forgot Password?</a></p>
+                <button type="submit" class="signin-btn">Sign In</button>
+                <div class="social-login">
+                    <button class="google-btn">Google</button>
+                    <button class="facebook-btn">Facebook</button>
+                </div>
+                <p class="signup-text">Don't have an account? <a href="signup.html">Sign Up</a></p>
+                <p class="forgot-password"><a href="forgot.html">Forgot Password?</a></p>
             </form>
         </div>
     </div>
