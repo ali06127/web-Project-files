@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Map</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body>
+  <header>
+    <h1>🌦️ Weather Map</h1>
+    <button id="darkModeToggle">🌓</button>
+  </header>
+
+  <main>
+    <div id="map"></div>
+    <div id="weatherInfo">
+      <h2>Weather Info</h2>
+      <p id="info">Click on the map to get weather data.</p>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js" type="module"></script>
+</body>
+</html>

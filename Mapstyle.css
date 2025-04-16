@@ -1,0 +1,67 @@
+:root {
+    --bg: #f0f0f0;
+    --text: #111;
+    --accent: #0077ff;
+  }
+  
+  body.dark {
+    --bg: #121212;
+    --text: #eee;
+    --accent: #0099ff;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--accent);
+    color: white;
+  }
+  
+  #darkModeToggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+  }
+  
+  main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 70px);
+  }
+  
+  #map {
+    flex: 3;
+    height: 100%;
+  }
+  
+  #weatherInfo {
+    flex: 1;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.03);
+    overflow-y: auto;
+  }
+  
+  #weatherInfo h2 {
+    margin-top: 0;
+  }
+  
+  @media (max-width: 768px) {
+    main {
+      flex-direction: column;
+    }
+    #map {
+      height: 300px;
+    }
+  }
+  
