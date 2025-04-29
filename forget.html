@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forgot Password - WeatherNow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      /* background: linear-gradient(135deg, #93c5fd, #1e40af); */
+      background: linear-gradient(135deg, #e0f2fe, #f8fafc); 
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .logo img {
+      width: 28px;
+      height: 28px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      role: "navigation";
+    }
+
+    nav a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -6px;
+      left: 0;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #1e293b;
+      cursor: pointer;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 24px;
+      padding: 0;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 3px;
+      background-color: #1e293b;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger[aria-expanded="true"] span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger[aria-expanded="true"] span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger[aria-expanded="true"] span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      border: 1px solid #60a5fa;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      background-color: #ffffff;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #1d4ed8;
+    }
+
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+      color: #1d4ed8;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #93c5fd;
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #f8fafc;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #1d4ed8;
+      box-shadow: 0 0 5px rgba(29, 78, 216, 0.3);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #1d4ed8;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #1e40af;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .success {
+      margin-top: 20px;
+      text-align: center;
+      color: #22c55e;
+      font-weight: bold;
+    }
+
+    .error {
+      margin-top: 10px;
+      text-align: center;
+      color: #ef4444;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+      }
+      .hamburger {
+        display: flex;
+      }
+      nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        text-align: center;
+        margin-top: 15px;
+      }
+      nav.active {
+        display: flex;
+      }
+      nav a {
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="cloudy.png" alt="Cloud Icon" aria-hidden="true"/>
+      WeatherNow
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav role="navigation">
+      <a href="home.html">Home</a>
+      <a href="forcast.html">Forecast</a>
+      <a href="map.html">Map</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Forgot Password</h2>
+      <p>We’ll send an OTP to your registered email</p>
+
+      <form id="forgotForm">
+        <!-- Email Section -->
+        <div class="form-group" id="emailSection">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+          <button type="submit" class="submit-btn" id="emailBtn">Send OTP</button>
+          <div id="emailError" class="error hidden"></div>
+        </div>
+
+        <!-- OTP Section -->
+        <div id="otpSection" class="hidden">
+          <div class="form-group">
+            <label for="otp">Enter OTP</label>
+            <input type="text" id="otp" placeholder="6-digit OTP" maxlength="6">
+          </div>
+          <button type="button" class="submit-btn" id="otpBtn">Verify OTP</button>
+          <div id="otpError" class="error hidden"></div>
+        </div>
+
+        <!-- Password Section -->
+        <div id="passwordSection" class="hidden">
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" placeholder="New password">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm password">
+          </div>
+          <button type="button" class="submit-btn" id="resetBtn">Reset Password</button>
+          <div id="passwordError" class="error hidden"></div>
+        </div>
+
+        <div id="successMessage" class="hidden success">✅ Password reset successful! You can now log in.</div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hamburger menu toggle
+      const hamburger = document.querySelector('.hamburger');
+      const nav = document.querySelector('nav');
+      hamburger.addEventListener('click', () => {
+        const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+        hamburger.setAttribute('aria-expanded', !isExpanded);
+        nav.classList.toggle('active');
+      });
+
+      // Form elements
+      const forgotForm = document.getElementById('forgotForm');
+      const emailSection = document.getElementById('emailSection');
+      const otpSection = document.getElementById('otpSection');
+      const passwordSection = document.getElementById('passwordSection');
+      const successMessage = document.getElementById('successMessage');
+      const emailInput = document.getElementById('email');
+      const otpInput = document.getElementById('otp');
+      const newPasswordInput = document.getElementById('newPassword');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const emailBtn = document.getElementById('emailBtn');
+      const otpBtn = document.getElementById('otpBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const emailError = document.getElementById('emailError');
+      const otpError = document.getElementById('otpError');
+      const passwordError = document.getElementById('passwordError');
+
+      // Simulated OTP for client-side testing
+      let generatedOTP = null;
+
+      // Handle Send OTP button
+      forgotForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        emailError.classList.add('hidden');
+        emailError.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          emailError.textContent = 'Please enter a valid email.';
+          emailError.classList.remove('hidden');
+          return;
+        }
+
+        // Simulate sending OTP
+        generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`Generated OTP: ${generatedOTP}`); // For debugging (remove in production)
+
+        // Transition to OTP section
+        emailSection.classList.add('hidden');
+        otpSection.classList.remove('hidden');
+        otpInput.value = '';
+        otpSection.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Handle Verify OTP button
+      otpBtn.addEventListener('click', () => {
+        const otp = otpInput.value.trim();
+        otpError.classList.add('hidden');
+        otpError.textContent = '';
+
+        if (!otp) {
+          otpError.textContent = 'Please enter the OTP.';
+          otpError.classList.remove('hidden');
+          return;
+        }
+
+        if (!isValidOTP(otp)) {
+          otpError.textContent = 'Please enter a valid 6-digit OTP.';
+          otpError.classList.remove('hidden');
+          return;
+        }
+
+        // Simulate OTP verification
+        if (otp !== generatedOTP) {
+          otpError.textContent = 'Invalid OTP. Please try again.';
+          otpError.classList.remove('hidden');
+          return;
+        }
+
+        // Transition to password section
+        otpSection.classList.add('hidden');
+        passwordSection.classList.remove('hidden');
+        newPasswordInput.value = '';
+        confirmPasswordInput.value = '';
+        passwordSection.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Handle Reset Password button
+      resetBtn.addEventListener('click', () => {
+        const newPassword = newPasswordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
+        passwordError.classList.add('hidden');
+        passwordError.textContent = '';
+
+        if (!newPassword || !confirmPassword) {
+          passwordError.textContent = 'Please fill out both password fields.';
+          passwordError.classList.remove('hidden');
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          passwordError.textContent = 'Passwords do not match.';
+          passwordError.classList.remove('hidden');
+          return;
+        }
+
+        if (newPassword.length < 8) {
+          passwordError.textContent = 'Password must be at least 8 characters long.';
+          passwordError.classList.remove('hidden');
+          return;
+        }
+
+        // Transition to success message
+        passwordSection.classList.add('hidden');
+        successMessage.classList.remove('hidden');
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Email validation function
+      function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      // OTP validation function (6-digit numeric)
+      function isValidOTP(otp) {
+        const otpRegex = /^\d{6}$/;
+        return otpRegex.test(otp);
+      }
+    });
+  </script>
+</body>
+</html>

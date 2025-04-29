@@ -1,35 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In - WeatherNow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      /* background: linear-gradient(135deg, #93c5fd, #1e40af); */
+      background: linear-gradient(135deg, #e0f2fe, #f8fafc); 
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    header {
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .logo img {
+      width: 28px;
+      height: 28px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -6px;
+      left: 0;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .hamburger span {
+      width: 100%;
+      height: 3px;
+      background: #1e293b;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        display: none;
+      }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 1rem;
+    }
+
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 450px;
+      backdrop-filter: blur(4px);
+    }
+
+    .form-container h2 {
+      margin-bottom: 0.75rem;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .form-container p {
+      margin-bottom: 1.5rem;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .password-group {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 65%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #6b7280;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+
+    .password-toggle:hover {
+      color: #1d4ed8;
+    }
+
+    .forgot-password {
+      float: right;
+      font-size: 0.9rem;
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-group input {
+      margin-right: 0.5rem;
+      accent-color: #1d4ed8;
+    }
+
+    .form-container button {
+      width: 100%;
+      background-color: #1d4ed8;
+      color: white;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .form-container button:hover {
+      background-color: #1e3a8a;
+      transform: translateY(-2px);
+    }
+
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-buttons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+    }
+
+    .social-buttons a img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .social-buttons a:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .google-btn {
+      background-color: #e6f0ff;
+    }
+
+    .google-btn:hover {
+      background-color: #d1e2ff;
+    }
+
+    .facebook-btn {
+      background-color: #dbeafe;
+    }
+
+    .facebook-btn:hover {
+      background-color: #bfdbfe;
+    }
+
+    .twitter-btn {
+      background-color: #bfdbfe;
+    }
+
+    .twitter-btn:hover {
+      background-color: #a3bffa;
+    }
+
+    .or-divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      color: #6b7280;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 45%;
+      height: 1px;
+      background: #d1d5db;
+    }
+
+    .or-divider::before {
+      left: 0;
+    }
+
+    .or-divider::after {
+      right: 0;
+    }
+
+    .signup-link {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .signup-link a {
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .form-container {
+        padding: 1.5rem;
+        max-width: 100%;
+      }
+
+      .social-buttons {
+        gap: 0.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="signin-box">
-            <h2>Sign In</h2>
-            <form id="signin-form">
-                <div class="input-group">
-                    <input type="email" id="signin-email" placeholder="Email" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="signin-password" placeholder="Password" required>
-                    <span class="toggle-password" onclick="togglePassword()">
-                        <img src="👁️" alt="Toggle Password">
-                    </span>
-                </div>
-                <button type="submit" class="signin-btn">Sign In</button>
-                <div class="social-login">
-                    <button class="google-btn">Google</button>
-                    <button class="facebook-btn">Facebook</button>
-                </div>
-                <p class="signup-text">Don't have an account? <a href="signup.html">Sign Up</a></p>
-                <p class="forgot-password"><a href="forgot.html">Forgot Password?</a></p>
-            </form>
-        </div>
+  <header>
+    <div class="logo">
+      <img src="cloudy.png" alt="Cloud Icon" aria-hidden="true" />
+      WeatherNow
     </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav role="navigation">
+      <a href="home.html">Home</a>
+      <a href="forcast.html">Forecast</a>
+      <a href="map.html">Map</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <div class="form-container">
+      <h2>Sign In</h2>
+      <p>Enter your email and password to access your account</p>
+      <form id="signinForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="name@example.com" required>
+        </div>
+        <div class="form-group password-group">
+          <label>Password <a href="forget.html" class="forgot-password">Forgot Password?</a></label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+          <span class="password-toggle" id="togglePassword">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember">
+          <label for="remember">Remember me</label>
+        </div>
+        <button type="submit">Sign In</button>
+      </form>
+      <div class="or-divider">OR CONTINUE WITH</div>
+      <div class="social-buttons">
+        <a href="https://accounts.google.com" target="_blank" rel="noopener noreferrer" class="google-btn">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231d4ed8' d='M12.24 10.44v2.85h5.9c-.24 1.54-1.8 4.54-5.9 4.54-3.56 0-6.47-2.95-6.47-6.58s2.91-6.58 6.47-6.58c1.8 0 3.42.74 4.58 1.93l2.1-2.1C17.1 2.34 14.76 1 12.24 1 6.58 1 2 5.58 2 11.24s4.58 10.24 10.24 10.24c5.9 0 10.24-4.66 10.24-10.24 0-.66-.06-1.32-.18-1.96h-10.06z'/%3E%3C/svg%3E" alt="Google Icon" />
+        </a>
+        <a href="https://www.facebook.com/login" target="_blank" rel="noopener noreferrer" class="facebook-btn">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231d4ed8' d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8v-6.9H7.9v-2.9H10V9.8c0-2.1 1.25-3.2 3.1-3.2.9 0 1.8.16 1.8.16v2h-1.03c-1 0-1.3.64-1.3 1.3v1.56h2.24l-.36 2.9h-1.88v6.9c4.56-.93 8-4.96 8-9.8z'/%3E%3C/svg%3E" alt="Facebook Icon" />
+        </a>
+        <a href="https://twitter.com/login" target="_blank" rel="noopener noreferrer" class="twitter-btn">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231d4ed8' d='M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11 1C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21-.36.1-.74.15-1.13.15-.27 0-.53-.03-.78-.08.53 1.64 2.07 2.84 3.89 2.87-1.42 1.12-3.22 1.79-5.17 1.79-.34 0-.67-.02-1-.06 1.85 1.18 4.05 1.88 6.42 1.88 7.69 0 11.9-6.38 11.9-11.9 0-.18 0-.36-.01-.54.82-.59 1.53-1.32 2.09-2.16z'/%3E%3C/svg%3E" alt="Twitter Icon" />
+        </a>
+      </div>
+      <p class="signup-link">Don't have an account? <a href="signUp.html">Sign up</a></p>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const togglePassword = document.getElementById('togglePassword');
+      const password = document.getElementById('password');
+      togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
+      });
+
+      const form = document.getElementById('signinForm');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const email = form.querySelector('input[type="email"]').value.trim();
+        const password = form.querySelector('#password').value;
+        const remember = form.querySelector('#remember').checked;
+
+        let errors = [];
+        if (!email || !isValidEmail(email)) errors.push('A valid email is required');
+        if (!password) errors.push('Password is required');
+
+        if (errors.length > 0) {
+          alert('Please fix the following errors:\n' + errors.join('\n'));
+          return;
+        }
+
+        const formData = { email, password, remember };
+        console.log('Form Data:', formData);
+        alert('Signed in successfully!');
+
+        form.reset();
+      });
+
+      function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+    });
+  </script>
 </body>
 </html>

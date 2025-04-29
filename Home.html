@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeatherNow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .logo img {
+      width: 28px;
+      height: 28px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      role: "navigation";
+    }
+
+    nav a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -6px;
+      left: 0;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .auth-buttons a {
+      margin-left: 16px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .auth-buttons .sign-in {
+      background: white;
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .auth-buttons .sign-in:hover {
+      background: #f1f5f9;
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-buttons .sign-up {
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      color: white;
+      border: none;
+      animation: pulse 2s infinite;
+    }
+
+    .auth-buttons .sign-up:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      width: 30px;
+      height: 20px;
+      position: relative;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background: #1e293b;
+      border-radius: 3px;
+      opacity: 1;
+      left: 0;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger span:nth-child(1) { top: 0; }
+    .hamburger span:nth-child(2) { top: 8px; }
+    .hamburger span:nth-child(3) { top: 16px; }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg);
+      top: 8px;
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg);
+      top: 8px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 100px 60px 60px;
+      background: linear-gradient(to bottom, #e0f2fe, #bae6fd);
+      flex-wrap: wrap;
+      gap: 30px;
+      position: relative;
+      overflow: hidden;
+      animation: cloud-move 60s linear infinite;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.3)" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,202.7C672,203,768,181,864,176C960,171,1056,181,1152,181.3C1248,181,1344,171,1392,165.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+      background-size: 50%;
+      z-index: 0;
+      animation: cloud-shift 120s linear infinite;
+    }
+
+    @keyframes cloud-move {
+      0% { background-position: 0 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @keyframes cloud-shift {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .hero-text {
+      max-width: 500px;
+      z-index: 1;
+    }
+
+    .hero-text h1 {
+      font-size: 3.2rem;
+      margin-bottom: 20px;
+      line-height: 1.2;
+      color: #1e293b;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-text p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #475569;
+    }
+
+    .hero-text .buttons a {
+      padding: 12px 24px;
+      margin-right: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .hero-text .buttons a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .explore {
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      color: white;
+      border: none;
+    }
+
+    .signin {
+      background: white;
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .weather-card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      max-width: 280px;
+      margin-top: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      z-index: 1;
+      border: 1px solid #e2e8f0;
+    }
+
+    .weather-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .weather-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .weather-card h3 img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .weather-card .temp {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 10px 0;
+      color: #1d4ed8;
+    }
+
+    .weather-card p {
+      font-size: 0.95rem;
+      color: #475569;
+      margin: 4px 0;
+    }
+
+    .features {
+      padding: 80px 60px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .features h2 {
+      font-size: 2.6rem;
+      margin-bottom: 48px;
+      color: #1e293b;
+      letter-spacing: 0.5px;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-item {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      background-clip: padding-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 16px;
+      padding: 1px;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-10px);
+    }
+
+    .feature-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+      transform: rotate(10deg) scale(1.1);
+    }
+
+    .feature-icon img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .feature-item h4 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #1e293b;
+    }
+
+    .feature-item p {
+      font-size: 1rem;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    .feature-item:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px #1d4ed8;
+    }
+
+    /* Individual Feature Card Styles */
+    .feature-item:nth-child(1) {
+      background: #dbeafe;
+    }
+    .feature-item:nth-child(1) .feature-icon {
+      background: linear-gradient(to right, #3b82f6, #93c5fd);
+    }
+    .feature-item:nth-child(1):hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .feature-item:nth-child(2) {
+      background: #cffafe;
+    }
+    .feature-item:nth-child(2) .feature-icon {
+      background: linear-gradient(to right, #06b6d4, #67e8f9);
+    }
+    .feature-item:nth-child(2):hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 12px rgba(6, 182, 212, 0.3);
+    }
+
+    .feature-item:nth-child(3) {
+      background: #e0e7ff;
+    }
+    .feature-item:nth-child(3) .feature-icon {
+      background: linear-gradient(to right, #6366f1, #a5b4fc);
+    }
+    .feature-item:nth-child(3):hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .feature-item:nth-child(4) {
+      background: #dcfce7;
+    }
+    .feature-item:nth-child(4) .feature-icon {
+      background: linear-gradient(to right, #22c55e, #86efac);
+    }
+    .feature-item:nth-child(4):hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .feature-item:nth-child(5) {
+      background: #fef9c3;
+    }
+    .feature-item:nth-child(5) .feature-icon {
+      background: linear-gradient(to right, #eab308, #fde047);
+    }
+    .feature-item:nth-child(5):hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 12px rgba(234, 179, 8, 0.3);
+    }
+
+    .feature-item:nth-child(6) {
+      background: #f3e8ff;
+    }
+    .feature-item:nth-child(6) .feature-icon {
+      background: linear-gradient(to right, #8b5cf6, #c4b5fd);
+    }
+    .feature-item:nth-child(6):hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 12px rgba(139, 92, 246, 0.3);
+    }
+
+    footer {
+      background: linear-gradient(to bottom, #1e293b, #0f172a);
+      color: #f1f5f9;
+      padding: 60px 60px 20px;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fff" fill-opacity="1" d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,186.7C672,192,768,160,864,149.3C960,139,1056,149,1152,176C1248,203,1344,245,1392,266.7L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>');
+      background-size: cover;
+      z-index: 0;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #475569;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-section h4 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .footer-section p, .footer-section a {
+      color: #d1d5db;
+      text-decoration: none;
+      line-height: 1.8;
+    }
+
+    .footer-section a:hover {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
+
+    .footer-links a {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .footer-social a {
+      margin-right: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .footer-social img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .footer-social a:hover {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.5));
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .newsletter-form input {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      width: 200px;
+      font-size: 0.9rem;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #1d4ed8;
+    }
+
+    .newsletter-form button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(to right, #1d4ed8, #3b82f6);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .newsletter-form button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      color: #d1d5db;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-bottom a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3b82f6;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 16px 30px;
+      }
+
+      nav {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100%;
+        background: white;
+        padding: 80px 20px 20px;
+        box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      nav.active {
+        display: flex;
+        transform: translateX(0);
+      }
+
+      nav a {
+        margin: 12px 0;
+        font-size: 1.1rem;
+      }
+
+      .auth-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .auth-buttons a {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .hamburger {
+        display: block;
+        z-index: 1001;
+      }
+
+      body.nav-active::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .hero {
+        padding: 60px 30px;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-text {
+        max-width: 100%;
+      }
+
+      .hero-text h1 {
+        font-size: 2.4rem;
+      }
+
+      .weather-card {
+        max-width: 100%;
+      }
+
+      .weather-card h3 img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .features {
+        padding: 60px 20px;
+      }
+
+      .feature-item {
+        padding: 24px;
+      }
+
+      .feature-icon {
+        width: 56px;
+        height: 56px;
+      }
+
+      .feature-icon img {
+        width: 28px;
+        height: 28px;
+      }
+
+      .feature-item h4 {
+        font-size: 1.2rem;
+      }
+
+      .feature-item p {
+        font-size: 0.95rem;
+      }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 20px 30px;
+      }
+
+      .footer-social img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .newsletter-form input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="cloudy.png" alt="Cloud Icon" aria-hidden="true" />
+      WeatherNow
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav role="navigation">
+      <a href="home.html">Home</a>
+      <a href="forcast.html">Forecast</a>
+      <a href="map.html">Map</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="auth-buttons">
+      <a href="signIn.html" class="sign-in" aria-label="Sign In">Sign In</a>
+      <a href="signUp.html" class="sign-up" aria-label="Sign Up">Sign Up</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Real-time weather at your fingertips</h1>
+      <p>Get accurate forecasts, interactive maps, and personalized weather alerts for any location worldwide.</p>
+      <div class="buttons">
+        <a href="signUp.html" class="explore" aria-label="Explore Forecast">Explore Forecast</a>
+        <a href="signIn.html" class="signin" aria-label="Sign In">Sign In</a>
+      </div>
+    </div>
+    <div class="weather-card">
+      <h3>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3EPartly Cloudy Icon%3C/title%3E%3Cpath fill='url(%23grad1)' d='M12 4a7.49 7.49 0 00-6.65 4.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96A7.49 7.49 0 0012 4zM17 2v4h4v2h-4v4h-2V8h-4V6h4V2h2z'/%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%231d4ed8;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E" alt="Partly Cloudy Icon" aria-hidden="true" />
+        New York, US
+      </h3>
+      <p>Partly Cloudy</p>
+      <div class="temp">22°C</div>
+      <p>Feels like: 23°C</p>
+      <p>Humidity: 65%</p>
+      <p>Wind: 12 km/h</p>
+      <p>Pressure: 1012 hPa</p>
+      <p>UV Index: 5</p>
+      <p>Visibility: 10 km</p>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2>Powerful Weather Features</h2>
+    <div class="feature-list">
+      <div class="feature-item" tabindex="0" aria-label="Real-time Updates Feature">
+        <div class="feature-icon">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3EClock Icon%3C/title%3E%3Cpath fill='white' d='M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm1-13h-2v6l5.08 3.04.92-1.52L12 11.4V7z'/%3E%3C/svg%3E" alt="Clock Icon" aria-hidden="true" />
+        </div>
+        <h4>Real-time Updates</h4>
+        <p>Get the latest weather data with automatic updates every hour.</p>
+      </div>
+      <div class="feature-item" tabindex="0" aria-label="7-Day Forecast Feature">
+        <div class="feature-icon">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3ECalendar Icon%3C/title%3E%3Cpath fill='white' d='M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 16H5V10h14v10zM7 12h2v2H7v-2zm8 0h2v2h-2v-2z'/%3E%3C/svg%3E" alt="Calendar Icon" aria-hidden="true" />
+        </div>
+        <h4>7-Day Forecast</h4>
+        <p>Plan ahead with accurate 7-day weather predictions.</p>
+      </div>
+      <div class="feature-item" tabindex="0" aria-label="Wind & Conditions Feature">
+        <div class="feature-icon">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3EWind Icon%3C/title%3E%3Cpath fill='white' d='M3 9h14.5a2.5 2.5 0 000-5H15v2h2.5a.5.5 0 010 1H3v1zm0 6h10.5a2.5 2.5 0 000-5H11v2h2.5a.5.5 0 010 1H3v1zm18-3H6.5a2.5 2.5 0 000 5H9v-2H6.5a.5.5 0 010-1H21v-2z'/%3E%3C/svg%3E" alt="Wind Icon" aria-hidden="true" />
+        </div>
+        <h4>Wind & Conditions</h4>
+        <p>Detailed wind speed, direction, and atmospheric conditions.</p>
+      </div>
+      <div class="feature-item" tabindex="0" aria-label="Precipitation Alerts Feature">
+        <div class="feature-icon">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3ERain Icon%3C/title%3E%3Cpath fill='white' d='M12 4a7.49 7.49 0 00-6.65 4.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h1l2-4 2 4h8c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96A7.49 7.49 0 0012 4z'/%3E%3C/svg%3E" alt="Rain Icon" aria-hidden="true" />
+        </div>
+        <h4>Precipitation Alerts</h4>
+        <p>Never get caught in the rain with timely precipitation alerts.</p>
+      </div>
+      <div class="feature-item" tabindex="0" aria-label="UV Index Tracking Feature">
+        <div class="feature-icon">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3ESun Icon%3C/title%3E%3Cpath fill='white' d='M12 2v2m0 16v2m10-10h-2M6 12H4m16.24-6.24l-1.41-1.41M7.17 16.83l-1.41 1.41m12.48 0l-1.41-1.41M7.17 7.17l-1.41 1.41M12 6a6 6 0 100 12 6 6 0 000-12z'/%3E%3C/svg%3E" alt="Sun Icon" aria-hidden="true" />
+        </div>
+        <h4>UV Index Tracking</h4>
+        <p>Monitor UV levels to stay safe under the sun.</p>
+      </div>
+      <div class="feature-item" tabindex="0" aria-label="Air Quality Insights Feature">
+        <div class="feature-icon">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3ESmog Icon%3C/title%3E%3Cpath fill='white' d='M6 19h12v2H6v-2zm-2-4h16v2H4v-2zm3-4h10v2H7v-2zm-3-4h16v2H4V7zm8-5a4 4 0 100 8 4 4 0 000-8z'/%3E%3C/svg%3E" alt="Smog Icon" aria-hidden="true" />
+        </div>
+        <h4>Air Quality Insights</h4>
+        <p>Access real-time air pollution data for healthier choices.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="logo">
+          <img src="cloudy.png" alt="Cloud Icon" aria-hidden="true" />
+          <a href="home.html" class="footer-logo">WeatherNow</a>
+        </div>
+        
+        <p>WeatherNow provides real-time weather updates, forecasts, and alerts for locations worldwide. Stay prepared with our accurate and user-friendly platform.</p>
+        <div class="footer-social">
+          <a href="https://facebook.com" aria-label="Facebook">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3EFacebook Icon%3C/title%3E%3Cpath fill='%23d1d5db' d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.98h-2.54v-2.9h2.54v-2.21c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.24.19 2.24.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34v6.98C18.34 21.13 22 16.99 22 12z'/%3E%3C/svg%3E" alt="Facebook Icon" />
+          </a>
+          <a href="https://twitter.com" aria-label="Twitter">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3ETwitter Icon%3C/title%3E%3Cpath fill='%23d1d5db' d='M22.46 6c-.77.34-1.6.57-2.46.67 1.46-.87 2.58-2.25 3.11-3.89-.68.4-1.44.69-2.25.85a3.53 3.53 0 00-6.01 3.22A10.01 10.01 0 013.01 3.78a3.53 3.53 0 001.09 4.71c-.63-.02-1.22-.19-1.74-.48v.05a3.53 3.53 0 002.83 3.46c-.52.14-1.07.17-1.62.06a3.53 3.53 0 003.3 2.45A7.09 7.09 0 011 19.54a10.01 10.01 0 005.42 1.59c6.52 0 10.08-5.4 10.08-10.08 0-.15 0-.31-.01-.46a7.22 7.22 0 001.77-1.83z'/%3E%3C/svg%3E" alt="Twitter Icon" />
+          </a>
+          <a href="https://instagram.com" aria-label="Instagram">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3EInstagram Icon%3C/title%3E%3Cpath fill='%23d1d5db' d='M12 2.16c3.21 0 3.58.01 4.85.07 1.17.06 1.81.25 2.23.41.56.22.96.49 1.38.91.42.42.69.82.91 1.38.16.42.35 1.06.41 2.23.06 1.27.07 1.64.07 4.85s-.01 3.58-.07 4.85c-.06 1.17-.25 1.81-.41 2.23-.22.56-.49.96-.91 1.38-.42.42-.82.69-1.38.91-.42.16-1.06.35-2.23.41-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.06-1.81-.25-2.23-.41-.56-.22-.96-.49-1.38-.91-.42-.42-.69-.82-.91-1.38-.16-.42-.35-1.06-.41-2.23-.06-1.27-.07-1.64-.07-4.85s.01-3.58.07-4.85c.06-1.17.25-1.81.41-2.23.22-.56.49-.96.91-1.38.42-.42.82-.69 1.38-.91.42-.16 1.06-.35 2.23-.41 1.27-.06 1.64-.07 4.85-.07zm0 1.68c-3.15 0-3.54.01-4.78.07-1.08.05-1.67.23-2.06.39-.5.2-.86.44-1.23.81-.37.37-.61.73-.81 1.23-.16.39-.34.98-.39 2.06-.06 1.24-.07 1.63-.07 4.78s.01 3.54.07 4.78c.05 1.08.23 1.67.39 2.06.2.5.44.86.81 1.23.37.37.73.61 1.23.81.39.16.98.34 2.06.39 1.24.06 1.63.07 4.78.07s3.54-.01 4.78-.07c1.08-.05 1.67-.23 2.06-.39.5-.2.86-.44 1.23-.81.37-.37.61-.73.81-1.23.16-.39.34-.98.39-2.06.06-1.24.07-1.63.07-4.78s-.01-3.54-.07-4.78c-.05-1.08-.23-1.67-.39-2.06-.2-.5-.44-.86-.81-1.23-.37-.37-.73-.61-1.23-.81-.39-.16-.98-.34-2.06-.39-1.24-.06-1.63-.07-4.78-.07zm0 3.66a6.5 6.5 0 100 13 6.5 6.5 0 000-13zm0 10.83a4.33 4.33 0 110-8.66 4.33 4.33 0 010 8.66zm6.76-11.16a1.52 1.52 0 100-3.04 1.52 1.52 0 000 3.04z'/%3E%3C/svg%3E" alt="Instagram Icon" />
+          </a>
+          <a href="https://linkedin.com" aria-label="LinkedIn">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctitle%3ELinkedIn Icon%3C/title%3E%3Cpath fill='%23d1d5db' d='M19.44 3H4.56A1.56 1.56 0 003 4.56v14.88A1.56 1.56 0 004.56 21h14.88A1.56 1.56 0 0021 19.44V4.56A1.56 1.56 0 0019.44 3zM7.65 18.75H5.25V9.75h2.4v9zm-1.2-10.2a1.4 1.4 0 110-2.8 1.4 1.4 0 010 2.8zm12.3 10.2h-2.4v-4.8c0-1.14-.41-1.92-1.44-1.92-.78 0-1.25.53-1.46 1.03-.08.18-.1.43-.1.68v5.01H10.5s.03-8.13 0-8.97h2.4v1.27c.32-.49.89-1.19 2.16-1.19 1.58 0 2.76 1.03 2.76 3.24v5.65z'/%3E%3C/svg%3E" alt="LinkedIn Icon" />
+          </a>
+        </div>
+      </div>
+      <div class="footer-section footer-links">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="forecast.html">Forecast</a>
+        <a href="map.html">Map</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h4>Stay Updated</h4>
+        <p>Subscribe to our newsletter for the latest weather updates and tips.</p>
+        <!-- Note: Add backend action URL for form submission in production -->
+        <form class="newsletter-form" aria-label="Newsletter Signup">
+          <input type="email" placeholder="Enter your email" required aria-label="Email Address" />
+          <button type="submit" aria-label="Subscribe to Newsletter">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 WeatherNow. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.querySelector('header nav');
+    const navLinks = document.querySelectorAll('header nav a');
+    const body = document.body;
+
+    hamburger.addEventListener('click', () => {
+      const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', !isExpanded);
+      hamburger.classList.toggle('active');
+      nav.classList.toggle('active');
+      body.classList.toggle('nav-active');
+    });
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.classList.remove('active');
+        nav.classList.remove('active');
+        body.classList.remove('nav-active');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !hamburger.contains(e.target) && nav.classList.contains('active')) {
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.classList.remove('active');
+        nav.classList.remove('active');
+        body.classList.remove('nav-active');
+      }
+    });
+
+    // Placeholder for newsletter form submission
+    const newsletterForm = document.querySelector('.newsletter-form');
+    newsletterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Thank you for subscribing! (This is a placeholder; integrate with backend for real functionality.)');
+      newsletterForm.reset();
+    });
+  </script>
+</body>
+</html>
